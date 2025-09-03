@@ -1,0 +1,157 @@
+from time import sleep
+lista_todos_produtos = []
+
+def menu_produtos():
+    
+    while True:
+        print('\n\033[30;47m---Área de Produtos---\033[0m ')
+        print('1 - Cadastrar Produto')
+        print('2 - Consultar Produto')
+        print('3 - Listar todos Produtos')
+        print('0 - Sair')
+
+        option = input('Informe a opção desejada: ')
+        
+        if option == '1':
+            while True:
+                try:
+                    product_name = input('\nInforme o nome do produto: ')
+                    product_price = float(input(f'Informe o preço do produto "{product_name}": R$'))
+                    sleep(0.3)
+                    print('\n\033[0;32mProduto cadastrado com sucesso\033[0m!')
+
+                    product_dic = {
+                        'nome': product_name,
+                        'preço': product_price
+                    }
+
+                    lista_todos_produtos.append(product_dic)
+                except ValueError:
+                    print('Entrada incompatível, tente novamente...')
+                    continue
+
+                wish_continue = input('\nDeseja continuar (s/n)? ').lower()
+                if wish_continue == 's' or wish_continue == 'sim':
+                    continue
+                elif wish_continue == 'n' or wish_continue == 'nao':
+                    print('Voltando pra Área de Produtos!')
+                    break
+                else:
+                    print('Entrada incompátivel, tente novamente...')
+
+        elif option == '2':
+            if not lista_todos_produtos:
+                print('\nNenhum produto cadastrado ainda!')
+                continue
+
+            while True:
+                product_consulting = input('\nInforme o nome do produto que deseja consultar: ').lower()
+
+                founded = False
+                for product in lista_todos_produtos:
+                    if product['nome'] == product_consulting:
+                        print(f"O produto: {product_consulting} custa R${product['preço']:.2f} ")
+                        founded = True
+                        break
+                if not founded:
+                    print(f'O produto "{product_consulting}" não foi encontrado.')
+
+
+                wish_continue_2 = input('\nDeseja consultar outro (s/n)? ').lower()
+                if wish_continue_2 == 's' or wish_continue_2 == 'sim':
+                    continue
+                elif wish_continue_2 == 'n' or wish_continue_2 == 'nao': 
+                    print('Voltando pra Área de Produtos!')
+                    sleep(0.4)
+                    break
+                else:
+                    print('Entrada incompátivel, tente novamente...')
+                    break
+
+        elif option == '3':
+            if not lista_todos_produtos:
+                print('\nA lista de produtos está vazia, nenhum foi cadastrado ainda!')
+
+            else:
+                print('\n--- Tabela com todos os produtos ---')
+                for i, produtos in enumerate(lista_todos_produtos):
+                    print(f'{i + 1}° produto: {produtos["nome"]}')
+
+            input('\nPressione Enter para voltar na Área de Produtos!')
+
+
+        elif option == '0':
+            print('\nVoltando pro menu principal...!')
+            print()
+            sleep(0.4)
+            break
+
+        else: 
+            print('Entrada incompátivel, tente novamente...')
+
+def menu_vendas():
+    all_sales = []    
+    print('\n\033[30;47m---Área de Vendas---\033[0m ')
+    print()
+    client_name = input('Informe o nome do cliente (ou digite "sair"): ').title()
+    date = input('Data em que foi vendido o produto (dd/mm/aaaa): ')
+    contador = 1
+    while True:
+        products_sold = input(f'Informe o nome do {contador}° produto que {client_name} comprou (ou digite "sair" caso não tenha produto cadastrado): ')
+        if products_sold == 'sair':
+            break
+        
+        #Lista de produtos comprados
+        product_list = []
+        found = False
+        for product in lista_todos_produtos:
+            if products_sold == product['nome']:
+                quantity = int(input(f'Quantidade do produto "{products_sold}" vendido: '))
+                product_list.append({
+                    'name': products_sold,
+                    'quantity': quantity,
+                    # 'price': product['preço']
+                })
+                found = True
+                contador += 1
+                break
+
+        if not found:
+            print('Produto não cadastrado!')
+               
+
+        inf_sales = {
+            'client': client_name,
+            'date': date,
+            'products': product_list    #chamar product['name'] product['quantity'] 
+        }
+
+        all_sales.append(inf_sales)
+        # print(all_sales)
+
+def menu_principal():
+    while True:
+        print('\033[30;47m===Sistema de controle de vendas!===\033[0m')
+        print('\nMenu principal: ')
+        print('1 - Área de produtos')
+        print('2 - Área de vendas')
+        print('0 - Sair')
+
+        option = input('Informe onde quer entrar: ')
+
+        match option:
+            case '1':
+                menu_produtos()
+                
+            case '2':
+                menu_vendas()
+            case '0':
+                print('\nSaindo do programa, até logo...')
+                break
+            case _:
+                print('\nEntrada incompatível, tente novamente...')
+                print()
+
+
+menu_principal()
+
