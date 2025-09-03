@@ -15,7 +15,7 @@ def menu_produtos():
         if option == '1':
             while True:
                 try:
-                    product_name = input('\nInforme o nome do produto: ')
+                    product_name = input('\nInforme o nome do produto: ').lower().strip()
                     product_price = float(input(f'Informe o preço do produto "{product_name}": R$'))
                     sleep(0.3)
                     print('\n\033[0;32mProduto cadastrado com sucesso\033[0m!')
@@ -61,11 +61,11 @@ def menu_produtos():
                 if wish_continue_2 == 's' or wish_continue_2 == 'sim':
                     continue
                 elif wish_continue_2 == 'n' or wish_continue_2 == 'nao': 
-                    print('Voltando pra Área de Produtos!')
+                    print('\nVoltando pra Área de Produtos!')
                     sleep(0.4)
                     break
                 else:
-                    print('Entrada incompátivel, tente novamente...')
+                    print('\nEntrada incompátivel, tente novamente...')
                     break
 
         elif option == '3':
@@ -102,7 +102,8 @@ def menu_vendas():
         
         if option == '1':
 
-            client_name = input('Informe o nome do cliente (ou digite "sair"): ').title().strip()
+            client_name = input('Informe o nome do cliente: ').title().strip()
+            
             date = input('Data em que foi vendido o produto (dd/mm/aaaa): ').strip()
             contador = 1
             #Lista de produtos comprados
@@ -166,6 +167,7 @@ def menu_vendas():
                     for product in information['products']:
                         print(f"Produto: {product['name']} - Quantidade: {product['quantity']}")
                         total += product['price'] * product['quantity']
+
             if found:
                 print(f'\nTotal gasto pelo cliente: {total:.2f}')       
             else:
@@ -218,4 +220,3 @@ def menu_principal():
 
 
 menu_principal()
-
