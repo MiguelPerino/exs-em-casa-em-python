@@ -88,46 +88,110 @@ def menu_produtos():
 
         else: 
             print('Entrada incompátivel, tente novamente...')
-
+all_sales = [] 
 def menu_vendas():
-    all_sales = []    
-    print('\n\033[30;47m---Área de Vendas---\033[0m ')
-    print()
-    client_name = input('Informe o nome do cliente (ou digite "sair"): ').title()
-    date = input('Data em que foi vendido o produto (dd/mm/aaaa): ')
-    contador = 1
+       
     while True:
-        products_sold = input(f'Informe o nome do {contador}° produto que {client_name} comprou (ou digite "sair" caso não tenha produto cadastrado): ')
-        if products_sold == 'sair':
-            break
+        print('\n\033[30;47m---Área de Vendas---\033[0m ')
+        print('1 - Cadastrar Venda')
+        print('2 - Consultar Venda')
+        print('3 - Listar todas as Vendas')
+        print('0 - Sair')
+
+        option = input('Informe a opção desejada: ')
         
-        #Lista de produtos comprados
-        product_list = []
-        found = False
-        for product in lista_todos_produtos:
-            if products_sold == product['nome']:
-                quantity = int(input(f'Quantidade do produto "{products_sold}" vendido: '))
-                product_list.append({
-                    'name': products_sold,
-                    'quantity': quantity,
-                    # 'price': product['preço']
-                })
-                found = True
-                contador += 1
-                break
+        if option == '1':
 
-        if not found:
-            print('Produto não cadastrado!')
-               
+            client_name = input('Informe o nome do cliente (ou digite "sair"): ').title().strip()
+            date = input('Data em que foi vendido o produto (dd/mm/aaaa): ').strip()
+            contador = 1
+            #Lista de produtos comprados
+            product_list = []
+            while True:
+                products_sold = input(f'Informe o nome do {contador}° produto que {client_name} comprou (ou digite "sair" caso não tenha produto cadastrado): ').strip().lower()
+                if products_sold == 'sair':
+                    break
+                
+                found = False
+                for product in lista_todos_produtos:
+                    if products_sold == product['nome'].lower():
+                        quantity = int(input(f'Quantidade do produto "{products_sold}" vendido: '))
+                        product_list.append({
+                            'name': product['nome'],
+                            'quantity': quantity,
+                            'price': product['preço']
+                        })
+                        found = True
+                        contador += 1
+                        break
 
-        inf_sales = {
-            'client': client_name,
-            'date': date,
-            'products': product_list    #chamar product['name'] product['quantity'] 
-        }
+                if not found:
+                    print('Produto não cadastrado!')
+                    
+            if product_list:
+                inf_sales = {
+                    'client': client_name,
+                    'date': date,
+                    'products': product_list    #chamar product['name'] product['quantity'] 
+                }
+                all_sales.append(inf_sales)
+                print('\nVenda cadastrada com sucesso!')
+            else: 
+                print('\nNenhum produto adicionado. Venda nao cadastrada')
 
-        all_sales.append(inf_sales)
-        # print(all_sales)
+        elif option == '2':    
+            if not all_sales:
+                print('\nNenhuma venda cadastrada!')
+                continue
+            
+
+            ## ADICIONAR SET(CONJUNTO) PARA NAO REPETIR OS NOMES
+            print('CLIENTES: ')
+            for client in all_sales:
+                print(client['client'], end = ' | ')
+            print()
+
+            search_client = input('Informe o nome do cliente que deseja consultar: ')
+
+            
+            found = False
+            total = 0
+            for information in all_sales:
+                if search_client == information['client']:
+                    if not found:
+                        print(f"\nCliente: {search_client}")
+                        found = True
+
+                    print(f"Data: {information['date']}")
+                    for product in information['products']:
+                        print(f"Produto: {product['name']} - Quantidade: {product['quantity']}")
+                        total += product['price'] * product['quantity']
+            if found:
+                print(f'\nTotal gasto pelo cliente: {total:.2f}')       
+            else:
+                print('\nCliente não encontrado!')        
+            
+            if not found:
+                print('\nCliente não encontrado')
+        ##    
+        elif option == '3':
+            print('\nLista de todos os clientes e seus produtos comprados: ')
+            print()
+            for dictionary in all_sales:
+                print(f"Nome: {dictionary['client']} - Data: {dictionary['date']}")
+                for products in dictionary['products']:
+                    print(f"Produto: {products['name']} - Quantidade: {products['quantity']} - Preço: {products['price']}")
+
+            #QUEM É O CLIENTE QUE MAIS GASTOU
+            ...
+        elif option == '0':
+            print('Voltando pro Menu Principal...!')
+            sleep(0.4)
+            break
+
+        else:
+            print('Entrada incompatível!')
+            
 
 def menu_principal():
     while True:
