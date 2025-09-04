@@ -73,7 +73,7 @@ def menu_produtos():
                 print('\nA lista de produtos está vazia, nenhum foi cadastrado ainda!')
 
             else:
-                print('\n--- Tabela com todos os produtos ---')
+                print('\n\033[30;47m--- Tabela com todos os produtos ---\033[0m')
                 for i, produtos in enumerate(lista_todos_produtos):
                     print(f'{i + 1}° produto: {produtos["nome"]}')
 
@@ -136,13 +136,13 @@ def menu_vendas():
                     'products': product_list    #chamar product['name'] product['quantity'] 
                 }
                 all_sales.append(inf_sales)
-                print('\nVenda cadastrada com sucesso!')
+                print('\n\033[32mVenda cadastrada com sucesso\033[0m!')
             else: 
                 print('\nNenhum produto adicionado. Venda nao cadastrada')
 
         elif option == '2':    
             if not all_sales:
-                print('\nNenhuma venda cadastrada!')
+                print('\n\033[31mNenhuma venda cadastrada\033[0m!')
                 continue
             
 
@@ -152,7 +152,7 @@ def menu_vendas():
                 print(client['client'], end = ' | ')
             print()
 
-            search_client = input('Informe o nome do cliente que deseja consultar: ')
+            search_client = input('Informe o nome do cliente que deseja consultar: ').title()
 
             
             found = False
@@ -169,21 +169,25 @@ def menu_vendas():
                         total += product['price'] * product['quantity']
 
             if found:
-                print(f'\nTotal gasto pelo cliente: {total:.2f}')       
-            else:
-                print('\nCliente não encontrado!')        
+                print(f'\nTotal gasto pelo cliente: {total:.2f}')           
             
             if not found:
-                print('\nCliente não encontrado')
+                print('\nCliente não encontrado!')
         ##    
         elif option == '3':
-            print('\nLista de todos os clientes e seus produtos comprados: ')
+            if not all_sales:
+                print('\n\033[31mNenhuma venda cadastrada\033[0m!')
+                continue
+
+            print('\n\033[30;47mLista de todos os clientes e seus produtos comprados:\033[0m ')
             print()
             for dictionary in all_sales:
+                print('-'*41)
                 print(f"Nome: {dictionary['client']} - Data: {dictionary['date']}")
                 for products in dictionary['products']:
-                    print(f"Produto: {products['name']} - Quantidade: {products['quantity']} - Preço: {products['price']}")
+                    print(f"Produto: {products['name']} - Quantidade: {products['quantity']} - Preço: R${products['price']:.2f}")
 
+            input('Pressione Enter para voltar para Área de Vendas')
             #QUEM É O CLIENTE QUE MAIS GASTOU
             ...
         elif option == '0':
