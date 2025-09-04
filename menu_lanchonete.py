@@ -148,8 +148,11 @@ def menu_vendas():
 
             ## ADICIONAR SET(CONJUNTO) PARA NAO REPETIR OS NOMES
             print('CLIENTES: ')
-            for client in all_sales:
-                print(client['client'], end = ' | ')
+            one_client = set()
+            for dic in all_sales:
+                one_client.add(dic['client'])
+            for value in one_client:
+                print(value, end = ' | ')
             print()
 
             search_client = input('Informe o nome do cliente que deseja consultar: ').title()
@@ -157,6 +160,7 @@ def menu_vendas():
             
             found = False
             total = 0
+            
             for information in all_sales:
                 if search_client == information['client']:
                     if not found:
@@ -167,13 +171,13 @@ def menu_vendas():
                     for product in information['products']:
                         print(f"Produto: {product['name']} - Quantidade: {product['quantity']}")
                         total += product['price'] * product['quantity']
-
+            
             if found:
                 print(f'\nTotal gasto pelo cliente: {total:.2f}')           
             
             if not found:
                 print('\nCliente não encontrado!')
-        ##    
+          
         elif option == '3':
             if not all_sales:
                 print('\n\033[31mNenhuma venda cadastrada\033[0m!')
@@ -188,10 +192,38 @@ def menu_vendas():
                     print(f"Produto: {products['name']} - Quantidade: {products['quantity']} - Preço: R${products['price']:.2f}")
 
             input('Pressione Enter para voltar para Área de Vendas')
+
+
             #QUEM É O CLIENTE QUE MAIS GASTOU
-            ...
+        elif option == '4':
+            if not all_sales:
+                print('\n\033[31mNenhuma venda cadastrada\033[0m...')
+                continue
+
+
+            print('O cliente que mais gastou na loja:')
+            spend = {}
+            for sale in all_sales:
+                client = sale['client']
+                for product in sale['products']:
+                    gasto_cliente = product['price'] * product['quantity']
+                    spend[client] = spend.get(client,0) + gasto_cliente     #pega o valor do cliente que ta, se nao tiver cliente, começa do zero e soma com o gasto
+            
+            firs_client = list(spend.keys())[0]
+            biggest = (firs_client, spend[firs_client])
+            for client, client_spend in spend.items():
+                if client_spend > biggest[1]:
+                    biggest = (client, client_spend)
+            
+            print(f'\nO cliente que mais teve gasto foi {biggest[0]} e gastou R${biggest[1]:.2f}!')
+
+
+
+
+
         elif option == '0':
-            print('Voltando pro Menu Principal...!')
+            print('\nVoltando pro Menu Principal...!')
+            print()
             sleep(0.4)
             break
 
